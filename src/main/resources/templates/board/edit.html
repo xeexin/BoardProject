@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Board</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Edit Board</h2>
+    <form th:action="@{/view/edit/{id}(id=${board.id})}" th:object="${board}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" th:field="*{title}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <input type="text" id="content" th:field="*{content}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">게시물 수정</button>
+    </form>
+</div>
+</body>
+</html>

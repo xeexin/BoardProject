@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HOME</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Board List</h1>
+    <table class="table" th:if="${!board.empty}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Created At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${board}">
+            <td th:text="${b.id}"></td>
+            <td th:text="${b.name}">
+            </td>
+            <td>
+                <a th:href="@{/view/{id}(id=${b.id})}" th:text="${b.title}"></a>
+            </td>
+
+            <td th:if="${b.updatedAt != null and b.updatedAt > b.createdAt}"
+                th:text="${#temporals.format(b.updatedAt, 'yyyy/MM/dd')}"></td>
+            <td th:if="${ b.updatedAt <= b.createdAt}"
+                th:text="${#temporals.format(b.createdAt, 'yyyy/MM/dd')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${board.totalPages > 1}">
+        <ul class="pagination">
+            <li class="page-item" th:each="i : ${#numbers.sequence(1,board.totalPages)}"
+                th:classappend="${i == board.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{/view(page=${i})}" th:text="${i}"></a>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <a class="btn btn-primary" th:href="@{/view/writeForm}">글쓰기</a>
+</div>
+</body>
+</html>
