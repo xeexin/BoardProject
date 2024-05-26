@@ -10,6 +10,13 @@
 <body>
 <div class="container mt-5">
     <h2>Edit Board</h2>
+
+    <!-- 비밀번호 불일치 오류 메시지 -->
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <p th:text="${error}"></p>
+    </div>
+
+
     <form th:action="@{/view/edit/{id}(id=${board.id})}" th:object="${board}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="form-group">

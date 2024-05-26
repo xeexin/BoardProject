@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -50,7 +52,11 @@ public class BoardController {
     }
 
     @PostMapping("/writeForm")
-    public String addBoard(@ModelAttribute Board board) {
+    public String addBoard(@Validated @ModelAttribute Board board, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "/board/writeForm";
+        }
 
         //등록 시간도 (LocalDateTime도 같이) board에 넣어줘야 함
         LocalDateTime now = LocalDateTime.now();
@@ -78,26 +84,26 @@ public class BoardController {
         return "board/edit";
     }
 
+
     @PostMapping("/edit/{id}")
-    public String editBoard(@PathVariable Long id, @ModelAttribute Board board, Model model) {
+    public String editBoard(@PathVariable Long id, @ModelAttribute Board board, BindingResult result, Model model) {
+
         Board preBoard = service.findById(id);
 
-        //비밀 번호가 같으면
-        if (preBoard.getPassword().equals(board.getPassword())) {
-
-            //수정 날짜
-            LocalDateTime now = LocalDateTime.now();
-            board.setUpdatedAt(now);
-
+        if (!preBoard.getPassword().equals(board.getPassword())) {
             model.addAttribute("board", board);
-            service.save(board);
-
-            return "redirect:/view";
-
-        } else {
-            return "/board/wrongPasswordEdit";
+            model.addAttribute("error", "비밀 번호가 일치하지 않습니다.");
+            return "board/edit";
         }
 
+        //수정 날짜
+        LocalDateTime now = LocalDateTime.now();
+        board.setUpdatedAt(now);
+
+        model.addAttribute("board", board);
+        service.save(board);
+
+        return "redirect:/view";
     }
 
 
@@ -112,6 +118,20 @@ public class BoardController {
     }
 
     @PostMapping("/delete/{id}")
+    public String deleteBoard(@PathVariable("id") Long id, @ModelAttribute Board board,BindingResult result, Model model) {
+        Board preBoard = service.findById(id);
+
+        if (!preBoard.getPassword().equals(board.getPassword())) {
+            model.addAttribute("board", board);
+            model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
+            return "board/deleteForm";
+        }
+        model.addAttribute("board", board);
+        service.deleteBoard(id);
+        return "redirect:/view";
+    }
+
+    /*@PostMapping("/delete/{id}")
     public String deleteBoard(@PathVariable("id") Long id, @ModelAttribute Board board, Model model) {
         Board preBoard = service.findById(id);
         model.addAttribute("board", board);
@@ -123,5 +143,5 @@ public class BoardController {
             return "/board/wrongPasswordDelete";
         }
 
-    }
+    }*/
 }
