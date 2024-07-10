@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 
@@ -118,7 +119,7 @@ public class BoardController {
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteBoard(@PathVariable("id") Long id, @ModelAttribute Board board,BindingResult result, Model model) {
+    public String deleteBoard(@PathVariable("id") Long id, @ModelAttribute Board board, BindingResult result, Model model ) {
         Board preBoard = service.findById(id);
 
         if (!preBoard.getPassword().equals(board.getPassword())) {
