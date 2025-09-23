@@ -1,14 +1,24 @@
 spring:
   application:
-    name:friendExam
+    name:friendExam # 애플리케이션의 이름을 설정합니다. Spring Cloud 등에서 서비스 식별자로 사용될 수 있습니다.
 
   datasource:
+    # 데이터베이스 연결을 위한 JDBC URL입니다. 'exampledb' 데이터베이스에 연결합니다.
     url: jdbc:mysql://localhost:3306/exampledb
+    # 데이터베이스 접속에 사용할 사용자 이름입니다.
     username: root
+    # 데이터베이스 접속에 사용할 비밀번호입니다.
     password: heejin2
+    # 사용할 JDBC 드라이버의 클래스 이름입니다.
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    jpa:
-      hibernate:
-        ddl-auto: update
-      show-sql: true
+  # --- 중요 ---
+  # 아래 'jpa' 관련 설정은 'spring-boot-starter-data-jpa' 의존성을 사용할 때 유효합니다.
+  # 현재 build.gradle에는 'spring-boot-starter-data-jdbc'가 사용되고 있어 아래 설정들은 적용되지 않습니다.
+  # SQL 쿼리를 로그로 보려면 application.yml에 logging.level.org.springframework.jdbc.core=DEBUG 를 추가해야 합니다.
+  jpa:
+    hibernate:
+      # (JPA 사용 시) 애플리케이션 실행 시 Entity와 DB 테이블을 비교하여 스키마를 자동으로 갱신(update)하는 설정입니다.
+      ddl-auto: update
+    # (JPA 사용 시) JPA가 생성하는 SQL 쿼리를 콘솔에 출력하도록 설정합니다.
+    show-sql: true

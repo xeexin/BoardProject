@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Thymeleaf 템플릿 엔진을 사용함을 선언합니다. -->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
@@ -6,30 +7,40 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>게시물 등록</title>
+    <!-- Bootstrap CSS 파일을 링크합니다. -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
     <h1>게시물 등록</h1>
+    <!-- 게시물 등록 폼입니다. -->
+    <!-- th:action: 폼 제출 시 요청할 URL을 지정합니다. -->
+    <!-- th:method: HTTP 메소드를 지정합니다. -->
+    <!-- th:object: 폼 데이터를 바인딩할 객체(board)를 지정합니다. 컨트롤러에서 new Board()와 같이 빈 객체를 전달받습니다. -->
     <form th:action="@{/view/writeForm}" th:method="post" th:object="${board}">
         <div class="form-group">
             <label for="name">이름</label>
+            <!-- th:field="*{name}": id, name, value 속성을 자동으로 생성하고, 폼 객체의 'name' 필드와 양방향 바인딩합니다. -->
             <input type="text" id="name" th:field="*{name}" class="form-control" required>
+            <!-- th:if, th:errors: 'name' 필드에 유효성 검사 오류가 있을 경우, 해당 오류 메시지를 여기에 표시합니다. -->
             <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
         </div>
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" id="title" th:field="*{title}" class="form-control" required>
+            <!-- 'title' 필드에 대한 유효성 검사 오류 메시지를 표시합니다. -->
             <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
         </div>
         <div class="form-group">
             <label for="content">내용</label>
             <input type="text" id="content" th:field="*{content}" class="form-control" required>
+            <!-- 'content' 필드에 대한 유효성 검사 오류 메시지를 표시합니다. -->
             <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></div>
         </div>
         <div class="form-group">
             <label for="password">비밀번호</label>
             <input type="password" id="password" th:field="*{password}" class="form-control" required>
+            <!-- 'password' 필드에 대한 유효성 검사 오류 메시지를 표시합니다. -->
             <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
         </div>
         <button type="submit" class="btn btn-primary">게시물 등록</button>

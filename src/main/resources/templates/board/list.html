@@ -1,49 +1,64 @@
 <!doctype html>
+<!-- Thymeleaf 템플릿 엔진을 사용함을 선언합니다. -->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>HOME</title>
+    <!-- Bootstrap CSS 파일을 링크합니다. -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
     <h1>Board List</h1>
-    <table class="table" th:if="${!board.empty}">
+    <!-- th:if="${!board.empty}": 컨트롤러에서 전달된 'board'(Page 객체)가 비어있지 않을 때만 테이블을 표시합니다. -->
+    <table class="table" th:if="${!board.isEmpty()}">
         <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Title</th>
-            <th>Created At</th>
+            <th>Date</th>
         </tr>
         </thead>
         <tbody>
+        <!-- th:each="b : ${board}": 'board' 컬렉션(Page 객체의 content)을 순회하며 각 항목을 'b' 변수에 담아 행을 반복 생성합니다. -->
         <tr th:each="b : ${board}">
+            <!-- th:text: 태그의 텍스트 내용을 서버에서 전달된 값으로 설정합니다. -->
             <td th:text="${b.id}"></td>
             <td th:text="${b.name}">
             </td>
             <td>
+                <!-- th:href="@{/view/{id}(id=${b.id})}": 게시물 상세 보기 페이지로 이동하는 링크를 동적으로 생성합니다. -->
                 <a th:href="@{/view/{id}(id=${b.id})}" th:text="${b.title}"></a>
             </td>
 
+            <!-- th:if: 조건에 따라 요소를 렌더링합니다. 수정일(updatedAt)이 생성일(createdAt)보다 나중인 경우 수정일을 표시합니다. -->
+            <!-- #temporals.format: Thymeleaf의 유틸리티 객체를 사용하여 날짜/시간 객체의 형식을 지정합니다. -->
             <td th:if="${b.updatedAt != null and b.updatedAt > b.createdAt}"
                 th:text="${#temporals.format(b.updatedAt, 'yyyy/MM/dd')}"></td>
+            <!-- 수정되지 않은 경우 생성일을 표시합니다. -->
             <td th:if="${ b.updatedAt <= b.createdAt}"
                 th:text="${#temporals.format(b.createdAt, 'yyyy/MM/dd')}"></td>
         </tr>
         </tbody>
     </table>
+
+    <!-- 페이지네이션 블록: 전체 페이지 수가 1보다 클 때만 표시됩니다. -->
     <div th:if="${board.totalPages > 1}">
         <ul class="pagination">
+            <!-- #numbers.sequence(1, board.totalPages): 1부터 전체 페이지 수까지의 숫자 시퀀스를 생성하여 반복합니다. -->
             <li class="page-item" th:each="i : ${#numbers.sequence(1,board.totalPages)}"
+                <!-- 현재 페이지 번호(board.number는 0부터 시작)와 반복 중인 페이지 번호(i는 1부터 시작)가 같으면 'active' 클래스를 추가합니다. -->
                 th:classappend="${i == board.number + 1} ? 'active'">
+                <!-- 각 페이지로 이동하는 링크를 생성합니다. -->
                 <a class="page-link" th:href="@{/view(page=${i})}" th:text="${i}"></a>
             </li>
         </ul>
     </div>
     <br>
+    <!-- 글쓰기 페이지로 이동하는 버튼입니다. -->
     <a class="btn btn-primary" th:href="@{/view/writeForm}">글쓰기</a>
 </div>
 </body>
